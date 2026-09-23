@@ -5,13 +5,11 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
-                // In production, this would be 'checkout scm'
             }
         }
 
         stage('Show Build Info') {
             steps {
-                // Printing Jenkins environment variables
                 echo "BUILD NUMBER: ${env.BUILD_NUMBER}"
                 echo "JOB NAME:     ${env.JOB_NAME}"
                 echo "WORKSPACE:    ${env.WORKSPACE}"
@@ -20,8 +18,9 @@ pipeline {
 
         stage('Run Linter') {
             steps {
-                echo "Running flake8 linter check on app.py..."
-                // Use 'sh' instead of 'bat' if your agent is Linux
+                echo "Installing flake8 if missing and running linter check..."
+                // Ensures flake8 is installed on the agent before validating app.py
+                bat "python -m pip install flake8"
                 bat "python -m flake8 app.py"
             }
         }
